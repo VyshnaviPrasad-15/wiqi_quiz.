@@ -1,0 +1,13 @@
+fastapi==0.95.2
+uvicorn[standard]==0.22.0
+sqlalchemy==2.0.20
+alembic==1.11.1
+pydantic==1.10.12
+requests==2.31.0
+beautifulsoup4==4.12.2
+python-dotenv==1.0.1
+gunicorn==21.2.0
+psycopg2-binary==2.9.7
+# Optional LLM/chain packages (enable only if you have API keys and compatible versions):
+# langchain
+# langchain-google-genai
