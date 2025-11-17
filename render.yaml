@@ -1,0 +1,25 @@
+# Render service configuration for the backend
+# See https://render.com/docs/render-yaml for details.
+services:
+  - type: web
+    name: wiqi-quiz-backend
+    env: docker
+    plan: free
+    repo: https://github.com/VyshnaviPrasad-15/wiqi_quiz
+    branch: master
+    dockerfilePath: backend/Dockerfile
+    buildCommand: ""
+    startCommand: "gunicorn -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:10000 --workers 2"
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+    healthCheckPath: /healthz
+    autoDeploy: true
+
+databases:
+  - name: wiqi-quiz-db
+    engine: postgres
+    plan: starter
+    branch: master

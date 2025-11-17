@@ -9,15 +9,27 @@ This document shows the recommended steps to publish the project using Vercel (f
 
 2. Deploy Backend to Render (recommended)
 
-- Create a Render account and connect your GitHub repo.
-- Create a new Web Service (choose Docker or the Python option).
-  - If using Docker, Render will use `backend/Dockerfile`.
-  - If using Python, set Build Command: `pip install -r requirements.txt` and Start Command: `gunicorn main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --workers 2`.
-- Set Environment Variables in Render:
-  - `DATABASE_URL` — connection string for your Postgres database (Render or external).
-  - `GEMINI_API_KEY` — (optional) API key for Gemini LLM if available.
-  - Any other secrets required.
-- Deploy and note the public URL of your backend (e.g., `https://your-backend.onrender.com`).
+- The repository now includes a `render.yaml` at the project root. When you connect the repo in Render, Render will detect `render.yaml` and can create the web service and a starter Postgres database automatically.
+
+Steps (recommended):
+
+1. Go to https://render.com and sign in.
+2. Click "New" → "Web Service" → "Connect a repository" and choose `VyshnaviPrasad-15/wiqi_quiz` and the `master` branch.
+   - If Render detects `render.yaml`, it will pre-fill settings. Review them and continue.
+   - If Render doesn't detect it, create a Docker Web Service and set:
+     - Environment: Docker
+     - Dockerfile Path: `backend/Dockerfile`
+     - Start Command: `gunicorn -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:10000 --workers 2`
+3. Add/manage a Postgres database on Render (optional). If you create a managed DB, copy the DB connection string and add it to the Web Service's Environment Variables as `DATABASE_URL`.
+4. Add other environment variables required by the app (Render Dashboard → Environment):
+   - `GEMINI_API_KEY` — optional: API key for LLM generation.
+   - `SENTRY_DSN` — optional: for error reporting.
+5. Deploy the service. After a successful build, note the public URL (for example, `https://wiqi-quiz-backend.onrender.com`).
+
+Notes:
+
+- The included `render.yaml` requests a small managed Postgres database (starter plan) when used to create services via Render. If you prefer an external DB, set `DATABASE_URL` manually and remove the DB from Render.
+- The `startCommand` in `render.yaml` binds to port `10000` — Render will route HTTP traffic to that port inside the container.
 
 3. Deploy Frontend to Vercel
 
