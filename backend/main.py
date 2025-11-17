@@ -151,3 +151,9 @@ async def get_quiz(quiz_id: int):
 @app.get('/healthz')
 async def healthz():
     return {"status": "ok"}
+
+
+@app.get('/')
+async def root_index():
+    # Provide a simple root endpoint so platform health checks that hit `/` don't get a 404.
+    return {"status": "ok", "service": "wiqi-quiz-backend"}

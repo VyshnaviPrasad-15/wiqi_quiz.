@@ -9,7 +9,9 @@ services:
     branch: master
     dockerfilePath: backend/Dockerfile
     buildCommand: ""
-    startCommand: "gunicorn -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:10000 --workers 2"
+  # Use the $PORT env var to let Render assign the container port; if the Dockerfile provides
+  # a CMD that binds to $PORT this field can be left blank. We set it explicitly here to be safe.
+  startCommand: "gunicorn -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:$PORT --workers 2"
     envVars:
       - key: DATABASE_URL
         sync: false

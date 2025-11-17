@@ -21,8 +21,10 @@ COPY backend/ ./
 RUN pip install --no-cache-dir --upgrade pip && \
     if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi
 
-# Expose the port Render will route to (we use 10000 in render.yaml)
-EXPOSE 10000
+# Expose the port Render will route to (default to 10000)
+ENV PORT=10000
+EXPOSE ${PORT}
 
-# Default command to run the backend
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "main:app", "--bind", "0.0.0.0:10000", "--workers", "2"]
+# Default command to run the backend; bind to the runtime $PORT so platforms can set the port
+# Use shell form so the env var is expanded at runtime.
+CMD sh -c "gunicorn -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:${PORT} --workers 2"
